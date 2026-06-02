@@ -1,36 +1,61 @@
-import React from "react";
+import React, { useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
-export default function Card(props) {
-  // Extrai dados do cartão e as funções de clique vindas do Main
-  const { name, link } = props.card;
-  const { onCardClick, onCardDelete } = props;
+export default function Card({
+  card,
+  isLiked,
+  onCardClick,
+  onCardLike,
+  onCardDelete,
+}) {
+  const { currentUser } = useContext(CurrentUserContext);
+
+  if (!card) return null;
+
+  // Lógica da lixeira
+  const isOwn =
+    card.owner?._id === currentUser?._id || card.owner === currentUser?._id;
+
+  // Define a classe ativa baseada no estado booleano dinâmico que vem do loop
+  const cardLikeButtonClassName = `card__like-button ${
+    isLiked ? "card__like-button_is-active" : ""
+  }`;
+
+  const cardDeleteButtonClassName = `card__delete-button ${
+    isOwn ? "card__delete-button_visible" : "card__delete-button_hidden"
+  }`;
+
+  function handleLikeClick() {
+    onCardLike(card, isLiked);
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(card);
+  }
 
   return (
     <li className='card'>
-      {/* Clique na imagem abre o ImagePopup */}
       <img
         className='card__image'
-        src={link}
-        alt={name}
-        onClick={() => onCardClick(props.card)}
+        src={card.link}
+        alt={card.name}
+        onClick={() => onCardClick(card)}
       />
-
-      {/* Clique na lixeira abre o RemoveCard */}
       <button
-        aria-label='Delete card'
-        className='card__delete-button'
+        className={cardDeleteButtonClassName}
         type='button'
-        onClick={onCardDelete}
+        aria-label='Excluir cartão'
+        onClick={handleDeleteClick}
       />
-
       <div className='card__description'>
-        <h2 className='card__title'>{name}</h2>
-
-        <button
-          aria-label='Like card'
-          type='button'
-          className='card__like-button'
-        />
+        <h2 className='card__title'>{card.name}</h2>
+        <div className='card__like-container'>
+          <button
+            className={cardLikeButtonClassName}
+            type='button'
+            onClick={handleLikeClick}
+          />
+        </div>
       </div>
     </li>
   );

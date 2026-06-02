@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 
 export default function Popup(props) {
-  const { onClose, title, children } = props;
+  const { onClose, title, children, isConfirmation, isImagePopup } = props;
 
-  // Fecha o popup ao pressionar a tecla "Escape"
+  // Gerencia o fechamento da janela ao pressionar a tecla Escape (ESC)
   useEffect(() => {
     const handleEscClose = (evt) => {
       if (evt.key === "Escape") {
@@ -12,38 +12,33 @@ export default function Popup(props) {
     };
 
     document.addEventListener("keydown", handleEscClose);
-    // Remove o ouvinte quando o componente é desmontado para evitar fugas de memória
+    // Limpa o ouvinte ao desmontar o componente para evitar vazamento de memória
     return () => document.removeEventListener("keydown", handleEscClose);
   }, [onClose]);
 
-  // Fecha o popup apenas se o clique for no fundo escuro (overlay)
+  // Fecha o popup se o usuário clicar na área escura (overlay) de fundo
   const handleOverlayClick = (evt) => {
     if (evt.target === evt.currentTarget) {
       onClose();
     }
   };
 
-  // Identificadores para classes CSS baseados no componente filho
-  const isImage = children.type.name === "ImagePopup";
-  const isConfirmation = children.type.name === "RemoveCard";
-
   return (
     <div className='popup' onClick={handleOverlayClick}>
       <div
         className={`popup__content 
-          ${isImage ? "popup__content_content_image" : ""} 
+          ${isImagePopup ? "popup__content_content_image" : ""} 
           ${isConfirmation ? "popup__content_type_confirmation" : ""}`}
       >
-        <button
-          aria-label='Close modal'
-          className='popup__close'
-          type='button'
-          onClick={onClose}
-        />
-
-        {/* Título dinâmico (ex: Editar Perfil) */}
-        {title && <h3 className='popup__title'>{title}</h3>}
-
+        {!isImagePopup && (
+          <button
+            aria-label='Close modal'
+            className='popup__close'
+            type='button'
+            onClick={onClose}
+          />
+        )}
+        {title && <h2 className='popup__title'>{title}</h2>}
         {children}
       </div>
     </div>
