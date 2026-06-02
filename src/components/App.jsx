@@ -5,10 +5,6 @@ import Footer from "./Footer/Footer";
 import api from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ImagePopup from "./ImagePopup/ImagePopup";
-import EditProfile from "./EditProfile/EditProfile";
-import EditAvatar from "./EditAvatar/EditAvatar";
-import NewCard from "./NewCard/NewCard";
-import Popup from "./Popup/Popup";
 
 function App() {
   // Estados globais da aplicação
@@ -166,56 +162,20 @@ function App() {
             onEditProfileClick={handleEditProfileClick}
             onEditAvatarClick={handleEditAvatarClick}
             onAddPlaceClick={handleAddPlaceClick}
+            isEditProfilePopupOpen={isEditProfilePopupOpen}
+            isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+            isAddPlacePopupOpen={isAddPlacePopupOpen}
+            isConfirmDeletePopupOpen={isConfirmDeletePopupOpen}
+            isLoading={isLoading}
+            onCloseAllPopups={closeAllPopups}
+            onAddPlaceSubmit={handleAddPlaceSubmit}
+            onConfirmDeleteSubmit={handleConfirmDeleteSubmit}
           />
 
           <Footer />
 
-          {/* Popup de Visualização da Imagem Expandida */}
           {selectedCard && (
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-          )}
-
-          {/* Popup para Edição de Perfil */}
-          {isEditProfilePopupOpen && (
-            <Popup title='Editar perfil' onClose={closeAllPopups}>
-              <EditProfile isLoading={isLoading} />
-            </Popup>
-          )}
-
-          {/* Popup para Edição de Avatar */}
-          {isEditAvatarPopupOpen && (
-            <Popup title='Alterar a foto do perfil' onClose={closeAllPopups}>
-              <EditAvatar isLoading={isLoading} />
-            </Popup>
-          )}
-
-          {/* Popup para Adição de Novo Cartão */}
-          {isAddPlacePopupOpen && (
-            <Popup title='Novo lugar' onClose={closeAllPopups}>
-              <NewCard
-                onAddPlaceSubmit={handleAddPlaceSubmit}
-                isLoading={isLoading}
-              />
-            </Popup>
-          )}
-
-          {/* Popup de Confirmação de Exclusão */}
-          {isConfirmDeletePopupOpen && (
-            <Popup
-              title='Tem certeza?'
-              onClose={closeAllPopups}
-              isConfirmation={true}
-            >
-              <form
-                className='popup__form'
-                onSubmit={handleConfirmDeleteSubmit}
-                noValidate
-              >
-                <button className='button popup__button' type='submit'>
-                  {isLoading ? "Deletando..." : "Sim"}
-                </button>
-              </form>
-            </Popup>
           )}
         </div>
       </div>

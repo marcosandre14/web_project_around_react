@@ -2,6 +2,11 @@ import React, { useContext } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import Card from "../Card/Card";
 
+import EditProfile from "../EditProfile/EditProfile";
+import EditAvatar from "../EditAvatar/EditAvatar";
+import NewCard from "../NewCard/NewCard";
+import Popup from "../Popup/Popup";
+
 export default function Main({
   cards,
   onCardLike,
@@ -10,6 +15,14 @@ export default function Main({
   onEditProfileClick,
   onEditAvatarClick,
   onAddPlaceClick,
+  isEditProfilePopupOpen,
+  isEditAvatarPopupOpen,
+  isAddPlacePopupOpen,
+  isConfirmDeletePopupOpen,
+  isLoading,
+  onCloseAllPopups,
+  onAddPlaceSubmit,
+  onConfirmDeleteSubmit,
 }) {
   const { currentUser } = useContext(CurrentUserContext);
 
@@ -63,6 +76,47 @@ export default function Main({
           })}
         </ul>
       </section>
+
+      {/* Popup para Edição de Perfil */}
+      {isEditProfilePopupOpen && (
+        <Popup title='Editar perfil' onClose={onCloseAllPopups}>
+          <EditProfile isLoading={isLoading} />
+        </Popup>
+      )}
+
+      {/* Popup para Edição de Avatar */}
+      {isEditAvatarPopupOpen && (
+        <Popup title='Alterar a foto do perfil' onClose={onCloseAllPopups}>
+          {" "}
+          <EditAvatar isLoading={isLoading} />
+        </Popup>
+      )}
+
+      {/* Popup para Adição de Novo Cartão */}
+      {isAddPlacePopupOpen && (
+        <Popup title='Novo lugar' onClose={onCloseAllPopups}>
+          <NewCard onAddPlaceSubmit={onAddPlaceSubmit} isLoading={isLoading} />
+        </Popup>
+      )}
+
+      {/* Popup de Confirmação de Exclusão */}
+      {isConfirmDeletePopupOpen && (
+        <Popup
+          title='Tem certeza?'
+          onClose={onCloseAllPopups}
+          isConfirmation={true}
+        >
+          <form
+            className='popup__form'
+            onSubmit={onConfirmDeleteSubmit}
+            noValidate
+          >
+            <button className='button popup__button' type='submit'>
+              {isLoading ? "Deletando..." : "Sim"}
+            </button>
+          </form>
+        </Popup>
+      )}
     </main>
   );
 }
