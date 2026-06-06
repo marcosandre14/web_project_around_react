@@ -5,6 +5,7 @@ import Card from "../Card/Card";
 import EditProfile from "../EditProfile/EditProfile";
 import EditAvatar from "../EditAvatar/EditAvatar";
 import NewCard from "../NewCard/NewCard";
+import RemoveCard from "../RemoveCard/RemoveCard"; // 🟢 1. Importamos o componente RemoveCard
 import Popup from "../Popup/Popup";
 
 export default function Main({
@@ -87,7 +88,6 @@ export default function Main({
       {/* Popup para Edição de Avatar */}
       {isEditAvatarPopupOpen && (
         <Popup title='Alterar a foto do perfil' onClose={onCloseAllPopups}>
-          {" "}
           <EditAvatar isLoading={isLoading} />
         </Popup>
       )}
@@ -99,22 +99,14 @@ export default function Main({
         </Popup>
       )}
 
-      {/* Popup de Confirmação de Exclusão */}
+      {/* Popup confirmação de remover card */}
       {isConfirmDeletePopupOpen && (
         <Popup
           title='Tem certeza?'
           onClose={onCloseAllPopups}
           isConfirmation={true}
         >
-          <form
-            className='popup__form'
-            onSubmit={onConfirmDeleteSubmit}
-            noValidate
-          >
-            <button className='button popup__button' type='submit'>
-              {isLoading ? "Deletando..." : "Sim"}
-            </button>
-          </form>
+          <RemoveCard onSubmit={onConfirmDeleteSubmit} isLoading={isLoading} />
         </Popup>
       )}
     </main>
